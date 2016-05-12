@@ -102,7 +102,7 @@ ALTER SEQUENCE ingredients_recipes_id_seq OWNED BY ingredients_recipes.id;
 
 CREATE TABLE ratings (
     id integer NOT NULL,
-    description character varying,
+    rating character varying,
     recipe_id integer
 );
 
@@ -285,7 +285,7 @@ COPY ingredients (id, name) FROM stdin;
 -- Name: ingredients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('ingredients_id_seq', 1, false);
+SELECT pg_catalog.setval('ingredients_id_seq', 261, true);
 
 
 --
@@ -300,14 +300,14 @@ COPY ingredients_recipes (id, ingredient_id, recipe_id) FROM stdin;
 -- Name: ingredients_recipes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('ingredients_recipes_id_seq', 1, false);
+SELECT pg_catalog.setval('ingredients_recipes_id_seq', 145, true);
 
 
 --
 -- Data for Name: ratings; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY ratings (id, description, recipe_id) FROM stdin;
+COPY ratings (id, rating, recipe_id) FROM stdin;
 \.
 
 
@@ -315,7 +315,7 @@ COPY ratings (id, description, recipe_id) FROM stdin;
 -- Name: ratings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('ratings_id_seq', 1, false);
+SELECT pg_catalog.setval('ratings_id_seq', 203, true);
 
 
 --
@@ -330,7 +330,7 @@ COPY recipes (id, name, instructions) FROM stdin;
 -- Name: recipes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('recipes_id_seq', 1, false);
+SELECT pg_catalog.setval('recipes_id_seq', 493, true);
 
 
 --
@@ -345,7 +345,7 @@ COPY recipes_tags (id, recipe_id, tag_id) FROM stdin;
 -- Name: recipes_tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('recipes_tags_id_seq', 1, false);
+SELECT pg_catalog.setval('recipes_tags_id_seq', 174, true);
 
 
 --
@@ -360,7 +360,7 @@ COPY tags (id, name) FROM stdin;
 -- Name: tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('tags_id_seq', 1, false);
+SELECT pg_catalog.setval('tags_id_seq', 315, true);
 
 
 --
