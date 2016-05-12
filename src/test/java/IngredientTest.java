@@ -9,7 +9,7 @@ public class IngredientTest {
   public DatabaseRule database = new DatabaseRule();
 
   @Test
-  public void Ingredient_InstantiatesWithString_true() {
+  public void Ingredient_InstantiatesWithString_String() {
     Ingredient testIngredient = new Ingredient("ingredient");
     assertEquals("ingredient",testIngredient.getName());
   }
@@ -20,7 +20,7 @@ public class IngredientTest {
   }
 
   @Test
-  public void equals_returnsTrueIfDescriptionsAreTheSame_true() {
+  public void equals_returnsTrueIfIngredientsAreTheSame_true() {
     Ingredient firstIngredient = new Ingredient("ingredient1");
     Ingredient secondIngredient = new Ingredient("ingredient1");
     assertTrue(firstIngredient.equals(secondIngredient));
@@ -50,7 +50,7 @@ public class IngredientTest {
   }
 
   @Test
-  public void update_updateIngredientInDatabase_true() {
+  public void update_updateIngredientNameInDatabase_true() {
     Ingredient testIngredient = new Ingredient("ingredient");
     testIngredient.save();
     testIngredient.update("other ingredient");
@@ -70,13 +70,13 @@ public class IngredientTest {
 
   @Test
   public void getRecipes_getsIngredientForARecipe_true() {
-    Recipe myRecipe = new Recipe("recipe");
-    myRecipe.save();
     Ingredient myIngredient = new Ingredient("ingredient");
     myIngredient.save();
-    myRecipe.addIngredient(myIngredient);
-    List savedIngredients = myRecipe.getIngredients();
-    assertEquals(1, savedIngredients.size());
+    Recipe myRecipe = new Recipe("recipe");
+    myRecipe.save();
+    myIngredient.addRecipe(myRecipe);
+    List savedRecipes = myIngredient.getRecipes();
+    assertEquals(1, savedRecipes.size());
   }
 
   @Test

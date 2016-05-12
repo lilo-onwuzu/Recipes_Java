@@ -3,19 +3,19 @@ import java.util.ArrayList;
 import org.sql2o.*;
 
 public class Ingredient {
-  private String name;
   private int id;
+  private String name;
 
   public Ingredient(String name) {
     this.name = name;
   }
 
-  public String getName() {
-    return name;
-  }
-
   public int getId() {
    return id;
+  }
+
+  public String getName() {
+    return name;
   }
 
   public static List<Ingredient> all(){
@@ -31,7 +31,7 @@ public class Ingredient {
       return false;
     } else {
       Ingredient newIngredient = (Ingredient) otherIngredient;
-      return this.getName().equals((newIngredient.getName())) &&
+      return this.getName().equals(newIngredient.getName()) &&
              this.getId() == newIngredient.getId();
     }
   }
@@ -78,16 +78,16 @@ public class Ingredient {
   }
 
   public List<Recipe> getRecipes() {
-    String joinQuery = "SELECT recipe_id FROM ingredients_recipes WHERE ingredient_id=:ingredientId";
+    String joinQuery = "SELECT recipe_id FROM ingredients_recipes WHERE ingredient_id=:ingredient_id";
     try (Connection con = DB.sql2o.open()) {
       List<Integer> recipeIds = con.createQuery(joinQuery)
-        .addParameter("ingredientId", this.getId())
+        .addParameter("ingredient_id", this.getId())
         .executeAndFetch(Integer.class);
 
       List<Recipe> recipeList = new ArrayList<Recipe>();
 
       for (Integer recipeId : recipeIds) {
-        String taskQuery = "SELECT name FROM recipes WHERE id=:recipe_id";
+        String taskQuery = "SELECT * FROM recipes WHERE id=:recipe_id";
           Recipe ingredient_recipe = con.createQuery(taskQuery)
             .addParameter("recipe_id", recipeId)
             .executeAndFetchFirst(Recipe.class);

@@ -52,11 +52,32 @@ public class RecipeTest {
   }
 
   @Test
-  public void update_updateRecipeDescriptionInDatabase_true() {
+  public void updateName_updateRecipeNameInDatabase_true() {
     Recipe testRecipe = new Recipe("recipe");
     testRecipe.save();
-    testRecipe.update("other recipe");
+    testRecipe.updateName("other recipe");
     assertEquals("other recipe", Recipe.find(testRecipe.getId()).getName());
+  }
+
+  @Test
+  public void updateInstructions_updateRecipeInstructionsInDatabase_true() {
+    Recipe testRecipe = new Recipe("recipe");
+    testRecipe.save();
+    testRecipe.updateInstructions("other recipe");
+    assertEquals("other recipe", Recipe.find(testRecipe.getId()).getInstructions());
+  }
+
+  @Test
+  public void getRatings_retrievesAllRatingsFromDatabase_List() {
+    Recipe myRecipe = new Recipe("recipe");
+    myRecipe.save();
+    Rating firstRating = new Rating("rating",myRecipe.getId());
+    firstRating.save();
+    Rating secondRating = new Rating("rating",myRecipe.getId());
+    secondRating.save();
+    // make an array of rating objects
+    Rating[] allRatings = new Rating[] {firstRating, secondRating};
+    assertTrue(myRecipe.getRatings().containsAll(Arrays.asList(allRatings)));
   }
 
   @Test
@@ -74,18 +95,43 @@ public class RecipeTest {
   }
 
   @Test
-  public void getTag_getsTagForARecipe_true() {
-    Recipe myBook = new Recipe("Rice");
-    myBook.save();
+  public void getTags_getsTagForARecipe_true() {
+    Recipe myRecipe = new Recipe("Rice");
+    myRecipe.save();
     Tag myTag = new Tag("Mexican");
     myTag.save();
-    myBook.addTag(myTag);
-    List savedTags = myBook.getTags();
+    myRecipe.addTag(myTag);
+    List savedTags = myRecipe.getTags();
     assertEquals(1, savedTags.size());
   }
 
   @Test
-  public void delete_deletesAllRecipesAndTagsAssociations() {
+  public void addIngredient_addsIngredientToRecipe_true() {
+    Recipe myRecipe = new Recipe("Rice");
+    // adds Book to list of books
+    myRecipe.save();
+    Ingredient myIngredient = new Ingredient("Mexican");
+    // adds Tag to list of tags
+    myIngredient.save();
+    // create relationship between tag and book
+    myRecipe.addIngredient(myIngredient);
+    Ingredient savedIngredient = myRecipe.getIngredients().get(0);
+    assertTrue(myIngredient.equals(savedIngredient));
+  }
+
+  @Test
+  public void getIngredient_getsIngredientsForARecipe_true() {
+    Recipe myRecipe = new Recipe("Rice");
+    myRecipe.save();
+    Ingredient myIngredient = new Ingredient("Mexican");
+    myIngredient.save();
+    myRecipe.addIngredient(myIngredient);
+    List<Ingredient> savedIngredients = myRecipe.getIngredients();
+    assertEquals(1, savedIngredients.size());
+  }
+
+  @Test
+  public void delete_deletesAllRecipesFromRecipesTableAndAssociationsTables() {
     Tag myTag = new Tag("Mexican");
     myTag.save();
     Recipe myRecipe = new Recipe("Rice");
@@ -93,19 +139,6 @@ public class RecipeTest {
     myRecipe.addTag(myTag);
     myRecipe.delete();
     assertEquals(0, myTag.getRecipes().size());
-  }
-
-  @Test
-  public void getRatings_retrievesAllRatingsFromDatabase_List() {
-    Recipe myRecipe = new Recipe("recipe");
-    myRecipe.save();
-    Rating firstRating = new Rating("rating",myRecipe.getId());
-    firstRating.save();
-    Rating secondRating = new Rating("rating",myRecipe.getId());
-    secondRating.save();
-    // make an array of rating objects
-    Rating[] allRatings = new Rating[] {firstRating, secondRating};
-    assertTrue(myRecipe.getRatings().containsAll(Arrays.asList(allRatings)));
   }
 
 }

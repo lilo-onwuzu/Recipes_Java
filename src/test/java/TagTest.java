@@ -21,7 +21,8 @@ public class TagTest {
   }
 
   @Test
-  public void equals_returnsTrueIfDescriptionsAreTheSame_true() {
+  public void equals_returnsTrueIfTagNAMESNOTidAreTheSame_true() {
+    // this.id retains 0 value until you use the save() method which gives it a non-zero id value
     Tag firstTag = new Tag("tag1");
     Tag secondTag = new Tag("tag1");
     assertTrue(firstTag.equals(secondTag));

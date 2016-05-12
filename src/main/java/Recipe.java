@@ -2,32 +2,30 @@ import java.util.List;
 import java.util.ArrayList;
 import org.sql2o.*;
 
+// Recipe class has 2 many to many relationships with Tag and Ingredient and one one to many relationship with rating
+// need methods: addTag(), getTags(), add Ingredient(), getIngredients(), getRatings().
 public class Recipe {
-  private String name;
   // this id for recipe will not be assigned in the construct but will be returned as this.id when we save() or insert the object instance into the DB. Until then it will have a value of "null"
   private int id;
+  private String name;
+  private String instructions = "";
 
   public Recipe(String name) {
     // the property/attribute/instance variable (this.name) of the Recipe object instance or "this" will be assigned to the argument String name once constructed
     this.name = name;
-  }
-
-  public String getName() {
-    return name;
+    this.instructions = instructions;
   }
 
   public int getId() {
    return id;
   }
 
-  // getcopies() method for ratings/recipes one to many relationship
-  public List<Rating> getRatings() {
-    String sql = "SELECT * FROM ratings where recipe_id=:recipeId";
-    try (Connection con = DB.sql2o.open()) {
-      return con.createQuery(sql)
-        .addParameter("recipeId", this.id)
-        .executeAndFetch(Rating.class);
-    }
+  public String getName() {
+    return name;
+  }
+
+  public String getInstructions() {
+    return instructions;
   }
 
   // all() will collect the static list of all the rows or objects in the DB. The DB class is defined in DB.java file and references the library DB
@@ -47,18 +45,20 @@ public class Recipe {
       Recipe newRecipe = (Recipe) otherRecipe;
       // should return true if the string names and integer ids are equal
       return this.getName().equals(newRecipe.getName()) &&
-             this.getId() == newRecipe.getId();
+             this.getId() == newRecipe.getId() &&
+             this.getInstructions().equals(newRecipe.getInstructions());
     }
   }
 
   // save() will insert rows of recipe objects (id, name) to the recipes table
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO recipes (name) VALUES (:name);";
+      String sql = "INSERT INTO recipes (name, instructions) VALUES (:name, :instructions);";
       // collect the primary key assigned through the DB, type-cast it to become an integer object and then assign it to the recipe_id. The recipe object instance id is now set/assigned
       this.id = (int) con.createQuery(sql, true)
         // the value to be saved is the name of the recipe object that is being saved (this.name)
         .addParameter("name", this.name)
+        .addParameter("instructions", this.instructions)
         .executeUpdate()
         .getKey();
     }
@@ -76,13 +76,34 @@ public class Recipe {
   }
 
   // update() finds the row or object instance with id=this.id (recipe's id) and resets its name to String update
-  public void update(String update) {
+  public void updateName(String update) {
     String sql = "UPDATE recipes SET name=:name WHERE id=:id";
     try(Connection con = DB.sql2o.open()) {
       con.createQuery(sql)
         .addParameter("name", update)
         .addParameter("id", this.id)
         .executeUpdate();
+    }
+  }
+
+  // update() finds the row or object instance with id=this.id (recipe's id) and resets its instructions to String newInstructions
+  public void updateInstructions(String newInstructions) {
+    String sql = "UPDATE recipes SET instructions=:instructions WHERE id=:id";
+    try(Connection con = DB.sql2o.open()) {
+      con.createQuery(sql)
+        .addParameter("instructions", newInstructions)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
+  }
+
+  // getRatings() method for ratings/recipes one to many relationship
+  public List<Rating> getRatings() {
+    String sql = "SELECT * FROM ratings where recipe_id=:recipe_id";
+    try (Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("recipe_id", this.id)
+        .executeAndFetch(Rating.class);
     }
   }
 
@@ -123,6 +144,36 @@ public class Recipe {
     }
   }
 
+  public void addIngredient(Ingredient myIngredient) {
+    String sql = "INSERT INTO ingredients_recipes (ingredient_id, recipe_id) VALUES (:ingredient_id, :recipe_id)";
+    try(Connection con = DB.sql2o.open()) {
+      con.createQuery(sql)
+        .addParameter("ingredient_id", myIngredient.getId())
+        .addParameter("recipe_id", this.getId())
+        .executeUpdate();
+    }
+  }
+
+  public List<Ingredient> getIngredients() {
+    String joinQuery = "SELECT ingredient_id FROM ingredients_recipes WHERE recipe_id=:recipe_id";
+    try (Connection con = DB.sql2o.open()) {
+      List<Integer> ingredientIds = con.createQuery(joinQuery)
+        .addParameter("recipe_id", this.getId())
+        .executeAndFetch(Integer.class);
+
+      List<Ingredient> ingredientList = new ArrayList<Ingredient>();
+
+      for (Integer ingredientId : ingredientIds) {
+        String taskQuery = "SELECT * FROM ingredients WHERE id=:ingredient_id";
+          Ingredient ingredient_recipe = con.createQuery(taskQuery)
+            .addParameter("ingredient_id", ingredientId)
+            .executeAndFetchFirst(Ingredient.class);
+            ingredientList.add(ingredient_recipe);
+      }
+      return ingredientList;
+    }
+  }
+
   // Recipe myRecipe.delete() for instance finds the row where id equals this.id OR myRecipe.id and deletes it
   public void delete() {
     // delete the recipe from recipes table
@@ -141,36 +192,6 @@ public class Recipe {
       con.createQuery(joinDelete2Query)
         .addParameter("recipe_id", this.getId())
         .executeUpdate();
-    }
-  }
-
-  public void addIngredient(Ingredient myIngredient) {
-    String sql = "INSERT INTO ingredients_recipes (ingredient_id, recipe_id) VALUES (:ingredient_id, :recipe_id)";
-    try(Connection con = DB.sql2o.open()) {
-      con.createQuery(sql)
-        .addParameter("ingredient_id", myIngredient.getId())
-        .addParameter("recipe_id", this.getId())
-        .executeUpdate();
-    }
-  }
-
-  public List<Ingredient> getIngredients() {
-    String joinQuery = "SELECT recipe_id FROM ingredients_recipes WHERE recipe_id=:recipe_id";
-    try (Connection con = DB.sql2o.open()) {
-      List<Integer> ingredientIds = con.createQuery(joinQuery)
-        .addParameter("recipe_id", this.getId())
-        .executeAndFetch(Integer.class);
-
-      List<Ingredient> ingredientList = new ArrayList<Ingredient>();
-
-      for (Integer ingredientId : ingredientIds) {
-        String taskQuery = "SELECT * FROM ingredients WHERE id=:ingredient_id";
-          Ingredient ingredient_recipe = con.createQuery(taskQuery)
-            .addParameter("ingredient_id", ingredientId)
-            .executeAndFetchFirst(Ingredient.class);
-            ingredientList.add(ingredient_recipe);
-      }
-      return ingredientList;
     }
   }
 

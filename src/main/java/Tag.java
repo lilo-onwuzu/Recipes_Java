@@ -3,19 +3,19 @@ import java.util.ArrayList;
 import org.sql2o.*;
 
 public class Tag {
-  private String name;
   private int id;
+  private String name;
 
   public Tag(String name) {
     this.name = name;
   }
 
-  public String getName() {
-    return name;
-  }
-
   public int getId() {
    return id;
+  }
+
+  public String getName() {
+    return name;
   }
 
   public static List<Tag> all(){
@@ -94,7 +94,7 @@ public class Tag {
       List<Recipe> recipeList = new ArrayList<Recipe>();
 
       for (Integer recipeId : recipeIds) {
-        String taskQuery = "SELECT name FROM recipes WHERE id=:recipe_id";
+        String taskQuery = "SELECT * FROM recipes WHERE id=:recipe_id";
         Recipe tag_recipe = con.createQuery(taskQuery)
           .addParameter("recipe_id", recipeId)
           .executeAndFetchFirst(Recipe.class);

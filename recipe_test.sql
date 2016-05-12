@@ -102,7 +102,8 @@ ALTER SEQUENCE ingredients_recipes_id_seq OWNED BY ingredients_recipes.id;
 
 CREATE TABLE ratings (
     id integer NOT NULL,
-    description character varying
+    description character varying,
+    recipe_id integer
 );
 
 
@@ -284,7 +285,7 @@ COPY ingredients (id, name) FROM stdin;
 -- Name: ingredients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('ingredients_id_seq', 133, true);
+SELECT pg_catalog.setval('ingredients_id_seq', 1, false);
 
 
 --
@@ -292,46 +293,6 @@ SELECT pg_catalog.setval('ingredients_id_seq', 133, true);
 --
 
 COPY ingredients_recipes (id, ingredient_id, recipe_id) FROM stdin;
-1	2	1
-2	4	2
-3	6	3
-4	9	15
-6	13	17
-7	16	29
-9	20	31
-10	23	43
-12	27	45
-13	30	57
-15	34	59
-16	37	71
-18	41	73
-19	44	85
-21	48	87
-22	51	99
-24	55	101
-25	58	113
-27	62	115
-28	65	127
-30	69	129
-31	72	141
-32	76	143
-33	79	155
-34	86	169
-35	87	170
-36	89	171
-37	93	183
-38	94	184
-39	96	185
-40	100	197
-41	101	198
-43	108	211
-44	109	212
-46	115	225
-47	116	226
-49	122	239
-50	123	240
-52	129	253
-53	130	254
 \.
 
 
@@ -339,14 +300,14 @@ COPY ingredients_recipes (id, ingredient_id, recipe_id) FROM stdin;
 -- Name: ingredients_recipes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('ingredients_recipes_id_seq', 54, true);
+SELECT pg_catalog.setval('ingredients_recipes_id_seq', 1, false);
 
 
 --
 -- Data for Name: ratings; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY ratings (id, description) FROM stdin;
+COPY ratings (id, description, recipe_id) FROM stdin;
 \.
 
 
@@ -369,7 +330,7 @@ COPY recipes (id, name, instructions) FROM stdin;
 -- Name: recipes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('recipes_id_seq', 266, true);
+SELECT pg_catalog.setval('recipes_id_seq', 1, false);
 
 
 --
@@ -377,80 +338,6 @@ SELECT pg_catalog.setval('recipes_id_seq', 266, true);
 --
 
 COPY recipes_tags (id, recipe_id, tag_id) FROM stdin;
-1	6	1
-3	9	3
-4	20	11
-6	23	13
-7	34	21
-9	37	23
-10	40	25
-11	41	26
-12	42	28
-13	48	31
-15	51	33
-16	54	35
-17	55	36
-18	56	38
-19	62	41
-21	65	43
-22	68	45
-24	70	48
-25	76	51
-27	79	53
-28	82	55
-30	84	58
-31	90	61
-33	93	63
-34	96	65
-35	97	66
-37	104	71
-39	107	73
-40	110	75
-41	111	76
-43	118	81
-45	121	83
-46	124	85
-47	125	86
-49	132	91
-51	135	93
-52	138	95
-53	139	96
-55	146	101
-57	149	103
-58	152	105
-59	153	106
-61	160	111
-63	163	113
-64	166	115
-65	167	116
-67	174	121
-69	177	123
-70	180	125
-71	181	126
-73	188	131
-75	191	133
-76	194	135
-77	195	136
-79	202	141
-81	205	143
-82	208	145
-83	209	146
-85	216	151
-87	219	153
-88	222	155
-89	223	156
-91	230	161
-93	233	163
-94	236	165
-95	237	166
-97	244	171
-99	247	173
-100	250	175
-101	251	176
-103	258	181
-105	261	183
-106	264	185
-107	265	186
 \.
 
 
@@ -458,7 +345,7 @@ COPY recipes_tags (id, recipe_id, tag_id) FROM stdin;
 -- Name: recipes_tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('recipes_tags_id_seq', 108, true);
+SELECT pg_catalog.setval('recipes_tags_id_seq', 1, false);
 
 
 --
@@ -473,7 +360,7 @@ COPY tags (id, name) FROM stdin;
 -- Name: tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('tags_id_seq', 190, true);
+SELECT pg_catalog.setval('tags_id_seq', 1, false);
 
 
 --

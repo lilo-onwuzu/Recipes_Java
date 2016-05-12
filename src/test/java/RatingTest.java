@@ -5,17 +5,24 @@ import java.util.List;
 
 public class RatingTest {
 
+  // rule to clear all the databases before/after each test
   @Rule
   public DatabaseRule database = new DatabaseRule();
 
   @Test
-  public void Rating_InstantiatesWithString_true() {
+  public void getRating_InstantiatesWithString_true() {
     Rating testRating = new Rating("rating", 2);
     assertEquals("rating",testRating.getRating());
   }
 
   @Test
-  public void all_EmptyAtFirst_true() {
+  public void getRecipeId_ReturnsCorrectRecipeID_int() {
+    Rating testRating = new Rating("rating", 4);
+    assertEquals(4,testRating.getRecipeId());
+  }
+
+  @Test
+  public void all_RatingsTableInDBIsEmptyAtFirst_true() {
     assertEquals(0, Rating.all().size());
   }
 
@@ -27,14 +34,14 @@ public class RatingTest {
   }
 
   @Test
-  public void save_savesObjectIntoDatabase_true() {
+  public void save_savesRatingObjectIntoDatabase_true() {
     Rating testRating = new Rating("rating", 2);
     testRating.save();
     assertTrue(Rating.all().get(0).equals(testRating));
   }
 
   @Test
-  public void save_assignsIdToObject_int() {
+  public void save_assignsCorrectIdToObject_int() {
     Rating testRating = new Rating("rating", 2);
     testRating.save();
     Rating savedRating = Rating.all().get(0);
@@ -42,7 +49,7 @@ public class RatingTest {
   }
 
   @Test
-  public void find_findRatingInDatabase_true() {
+  public void find_findCorrectRatingInDatabaseUsingId_true() {
     Rating testRating = new Rating("rating", 2);
     testRating.save();
     Rating savedRating = Rating.all().get(0);
@@ -54,19 +61,11 @@ public class RatingTest {
     Rating myRating = new Rating("rating", 2);
     myRating.save();
     myRating.delete();
-    assertEquals(0, myRating.all().size());
+    assertEquals(0, Rating.all().size());
   }
 
   @Test
-  public void updateID_updateRecipeDescriptionInDatabase_true() {
-    Rating testRating = new Rating("rating", 2);
-    testRating.save();
-    testRating.updateID(4);
-    assertEquals(4, Rating.find(testRating.getId()).getRating());
-  }
-
-  @Test
-  public void updateRecipeID_updateTaskDescriptionInDatabase_true() {
+  public void updateRecipeID_updateRecipeIDColumnInDatabase_true() {
     Rating testRating = new Rating("rating", 2);
     testRating.save();
     testRating.updateRecipeID(4);
