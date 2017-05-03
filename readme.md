@@ -9,7 +9,6 @@
 
 #### _Description_
 	Backend only java app to list food recipes and their ingredients
-	Recipes and Ingredients have many-to-many relationship.
 	The unit testing of the backend is done using jUnit.  
 
 #### _Setup/Installation Requirements_	 
@@ -22,7 +21,8 @@
 	lpr422@gmail.com
 	
 #### _Technologies Used_
-	Object Oriented Java, Many to Many Relationship Database, SQL on POSTGREs DB, jUnit backend testing
+	Object Oriented Java, One to Many Relationship Database, Many to Many Relationship Database, 
+	SQL on POSTGREs DB, jUnit backend testing
 
 #### _License_
 	This software is licensed under the MIT license
